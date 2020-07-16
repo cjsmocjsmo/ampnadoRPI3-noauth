@@ -31,13 +31,13 @@ from tornado.options import define, options, parse_command_line
 import pymongo
 import functions as Fun
 
-ampDBClient = pymongo.MongoClient("mongodb://db:27017/ampnadoDB")
-db = ampDBClient.ampnadoDB
+ampDBClient = pymongo.MongoClient("mongodb://ampdbserv:27017/ampnadoDB")
+ampdbserv = ampDBClient.ampnadoDB
 
-ampVDBClient = pymongo.MongoClient("mongodb://db:27017/ampviewsDB")
+ampVDBClient = pymongo.MongoClient("mongodb://ampdbserv:27017/ampviewsDB")
 viewsdb = ampVDBClient.ampviewsDB
 
-ampPDBClient = pymongo.MongoClient("mongodb://db:27017/picdb")
+ampPDBClient = pymongo.MongoClient("mongodb://ampdbserv:27017/picdb")
 pdb = ampPDBClient.picdb
 
 
@@ -54,7 +54,7 @@ define('server_port',
 )
 
 off_set = int(os.environ["AMP_OFFSET_SIZE"])
-# US_OP = db.options.find_one({})
+# US_OP = ampdbserv.options.find_one({})
 # define('server_port',
 # 	default=US_OP['server_port'],
 # 	help='run on the given port',
@@ -66,10 +66,10 @@ off_set = int(os.environ["AMP_OFFSET_SIZE"])
 
 class Application(tornado.web.Application):
 	def __init__(self):
-#		mpath = db.options.find_one({}, {'media_path': 1, '_id': 0})
+#		mpath = ampdbserv.options.find_one({}, {'media_path': 1, '_id': 0})
 		#mpath = "/home/pi/Music/"
 		#mpath = "/home/teresa/Music"
-		#progpath = db.prog_paths.find_one({}, {'programPath':1, '_id':0})
+		#progpath = ampdbserv.prog_paths.find_one({}, {'programPath':1, '_id':0})
 		mpath = os.environ["AMP_MEDIA_PATH"]
 		handlers = [
 			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': mpath}),
@@ -139,7 +139,7 @@ class LoginHandler(BaseHandler):
 		if self.check_value(creds[0]) and self.check_value(creds[1]):
 			phash = str(hashlib.sha512(creds[1].encode('utf-8')).hexdigest())
 			try:
-				uid = db.user_creds.find_one({'username': creds[0], 'password': phash})
+				uid = ampdbserv.user_creds.find_one({'username': creds[0], 'password': phash})
 				self.set_secure_cookie('ampnado', uid['user_id'])
 				self.redirect('/ampnado')
 			except TypeError:
@@ -155,7 +155,7 @@ class LogoutHandler(BaseHandler):
 class AllPlaylistsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def getpls(self):
-		try: return [(d['playlistname'], d['playlistid']) for d in db.playlists.find({}).sort([('playlistname', pymongo.ASCENDING)])]
+		try: return [(d['playlistname'], d['playlistid']) for d in ampdbserv.playlists.find({}).sort([('playlistname', pymongo.ASCENDING)])]
 		except KeyError: return []
 		
 	@tornado.web.authenticated
@@ -256,7 +256,7 @@ class SongInfoHandler(BaseHandler):
 class ImageSongsForAlbumHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_pic(self, aquery):
-		picid = db.main.find_one({'AlbumId':aquery}, {"_id":0, "PicId":1})
+		picid = ampdbserv.main.find_one({'AlbumId':aquery}, {"_id":0, "PicId":1})
 		poo = pdb.pics.find_one({"PicId":picid["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
 		return poo["AlbumArtHttpPath"]
 		
@@ -264,7 +264,7 @@ class ImageSongsForAlbumHandler(BaseHandler):
 	def getsongsongid(self, a_query):
 		foo = {}
 		foo['thumbnail'] = yield self.get_pic(a_query)
-		foo['songs'] = [(t['Song'], t['SongId']) for t in db.main.find({'AlbumId':a_query}, {'Song':1, 'SongId':1, '_id':0})]			
+		foo['songs'] = [(t['Song'], t['SongId']) for t in ampdbserv.main.find({'AlbumId':a_query}, {'Song':1, 'SongId':1, '_id':0})]			
 		return foo
 
 	@tornado.web.authenticated
@@ -277,7 +277,7 @@ class ImageSongsForAlbumHandler(BaseHandler):
 class PathArtHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_file_info(self, asongid):
-		return db.main.find_one({'SongId': asongid}, {'_id':0})
+		return ampdbserv.main.find_one({'SongId': asongid}, {'_id':0})
 	
 	@tornado.gen.coroutine
 	def get_pic_info(self, a_picid):		
@@ -297,7 +297,7 @@ class AllPlaylistSongsFromDBHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_songs_for_playlist(self, aplid):
 		try:
-			for playlist in db.playlists.find({'playlistid': aplid}):
+			for playlist in ampdbserv.playlists.find({'playlistid': aplid}):
 			 return [[pl['Song'], pl['SongId']] for pl in playlist['songs']]
 		except KeyError: return []
 		except TypeError: return []
@@ -312,7 +312,7 @@ class AllPlaylistSongsFromDBHandler(BaseHandler):
 class StatsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_stats(self):
-		return db.ampnado_stats.find_one({}, {'_id': 0})
+		return ampdbserv.ampnado_stats.find_one({}, {'_id': 0})
 
 	@tornado.gen.coroutine
 	def get(self):
@@ -322,11 +322,11 @@ class StatsHandler(BaseHandler):
 class AddPlayListNameToDBHandler(BaseHandler):
 	@tornado.gen.coroutine	
 	def _insert_plname(self, pln):
-		db.playlists.insert({'playlistname': pln, 'playlistid': str(uuid.uuid4().hex)})
+		ampdbserv.playlists.insert({'playlistname': pln, 'playlistid': str(uuid.uuid4().hex)})
 
 	@tornado.gen.coroutine
 	def _get_playlists(self):
-		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({})]
+		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in ampdbserv.playlists.find({})]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine		
@@ -339,15 +339,15 @@ class AddPlayListNameToDBHandler(BaseHandler):
 class AddSongsToPlistDBHandler(BaseHandler):
 	@tornado.gen.coroutine	
 	def insert_song_into_playlist(self, a_song_name, a_songid, a_plid):
-		song = db.main.find_one({'SongId': a_songid})
-		playlist = db.playlists.find_one({'playlistid': a_plid})
+		song = ampdbserv.main.find_one({'SongId': a_songid})
+		playlist = ampdbserv.playlists.find_one({'playlistid': a_plid})
 		try:
 			playlist['songs'].append(song)
-			db.playlists.update({'playlistid' : a_plid},
+			ampdbserv.playlists.update({'playlistid' : a_plid},
 				{'playlistname' : playlist['playlistname'], 'playlistid' : a_plid, 'songs' : playlist['songs']})
 		except KeyError:
 			playlist['songs'] = [song]
-			db.playlists.update({'playlistid': a_plid},
+			ampdbserv.playlists.update({'playlistid': a_plid},
 				{'playlistname' : playlist['playlistname'], 'playlistid' : a_plid, 'songs' : playlist['songs']})
 
 	@tornado.web.authenticated
@@ -362,19 +362,19 @@ class AddRandomPlaylistHandler(BaseHandler):
 	def create_random_playlist(self, aplname, aplcount):
 		pl = {}
 		aplcount = int(aplcount)
-		ids = db.main.distinct('_id')
+		ids = ampdbserv.main.distinct('_id')
 		random.shuffle(ids)
 		random_ids = random.sample(ids, aplcount)
 		new_song_list = []
 		for r in random_ids:
-			songs = db.main.find_one({'_id': r}, {'_id':0})
+			songs = ampdbserv.main.find_one({'_id': r}, {'_id':0})
 			new_song_list.append(songs)
 		random.shuffle(new_song_list)
 		pl['songs'] = new_song_list
 		pl['playlistname'] = aplname
 		pl['playlistid'] = str(uuid.uuid4().hex)
-		db.playlists.insert(pl)
-		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({}, {'_id':0})]
+		ampdbserv.playlists.insert(pl)
+		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in ampdbserv.playlists.find({}, {'_id':0})]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
@@ -386,7 +386,7 @@ class AddRandomPlaylistHandler(BaseHandler):
 class CreatePlayerPlaylistHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _make_playlist(self, a_plid):
-		playlist = db.playlists.find_one({'playlistid':a_plid})
+		playlist = ampdbserv.playlists.find_one({'playlistid':a_plid})
 		fart = []
 		try:
 			for pl in playlist['songs']:
@@ -414,12 +414,12 @@ class CreatePlayerPlaylistHandler(BaseHandler):
 class DeletePlaylistFromDBHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _delete_playlist(self, plid):
-		db.playlists.remove({'playlistid': plid})
+		ampdbserv.playlists.remove({'playlistid': plid})
 		return u'Playlist Dropped From DB'
 
 	@tornado.gen.coroutine
 	def get_pl_list(self, plid):
-		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({})]
+		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in ampdbserv.playlists.find({})]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
@@ -432,21 +432,21 @@ class DeletePlaylistFromDBHandler(BaseHandler):
 class DeleteSongFromPlaylistHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_rec_id(self, snameid):
-		rec_id = db.tags.find_one({'songid': snameid})
+		rec_id = ampdbserv.tags.find_one({'songid': snameid})
 		return rec_id['_id']
 		
 	@tornado.gen.coroutine
 	def _get_playlist_info(self, plname):
-		return db.playlists.find_one({'playlistname': plname})
+		return ampdbserv.playlists.find_one({'playlistname': plname})
 
 	@tornado.gen.coroutine
 	def _delete_song(self, pl, rid):
 		pl['songs'] = [asong for asong in pl['songs'] if asong['_id'] != rid]
-		db.playlists.update({'_id': pl['_id']}, {'$set': {'songs': pl['songs']}})
+		ampdbserv.playlists.update({'_id': pl['_id']}, {'$set': {'songs': pl['songs']}})
 
 	@tornado.gen.coroutine
 	def _get_new_playlist(self, pln):
-		return [playlist['songs'] for playlist in db.playlists.find({'playlistname': pln}, {'songs.song':1, 'songs.songid':1})]
+		return [playlist['songs'] for playlist in ampdbserv.playlists.find({'playlistname': pln}, {'songs.song':1, 'songs.songid':1})]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
@@ -487,7 +487,7 @@ class AlbumSearchHandler(BaseHandler):
 class SongSearchHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_search(self, sv):
-		search = db.command('text', 'main', search=sv)
+		search = ampdbserv.command('text', 'main', search=sv)
 		return [{'artist': sea['obj']['Artist'], 'song': sea['obj']['Song'], 'songid': sea['obj']['SongId']} for sea in search['results']]
 
 	@tornado.web.authenticated
@@ -500,7 +500,7 @@ class SongSearchHandler(BaseHandler):
 class RamdomAlbumPicPlaySongHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_song_info(self, apid):
-		return db.main.find_one({'SongId':apid}, {'HttpMusicPath':1, 'Filename':1, 'PicId':1, 'Song':1, 'Album':1, 'Artist':1, '_id':0})
+		return ampdbserv.main.find_one({'SongId':apid}, {'HttpMusicPath':1, 'Filename':1, 'PicId':1, 'Song':1, 'Album':1, 'Artist':1, '_id':0})
 
 	@tornado.gen.coroutine
 	def get_pic_info(self, pid):
@@ -519,16 +519,16 @@ class RamdomAlbumPicPlaySongHandler(BaseHandler):
 class RandomPicsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_count(self):
-		return len([d['chunkid'] for d in db.randthumb.find({'displayed':'NOTSHOWN'})])
+		return len([d['chunkid'] for d in ampdbserv.randthumb.find({'displayed':'NOTSHOWN'})])
 
 	@tornado.gen.coroutine
 	def get_chunk(self):
-		t5 = db.randthumb.find_one({'displayed': 'NOTSHOWN'})
+		t5 = ampdbserv.randthumb.find_one({'displayed': 'NOTSHOWN'})
 		return t5['chunkid'], t5['chunk'], t5['displayed']
 
 	@tornado.gen.coroutine
 	def update_db(self, aid):
-		db.randthumb.update({'chunkid': aid}, {'$set': {'displayed':'SHOWN'}})
+		ampdbserv.randthumb.update({'chunkid': aid}, {'$set': {'displayed':'SHOWN'}})
 
 	@tornado.gen.coroutine
 	def reset_displayed(self):
@@ -554,14 +554,14 @@ class RandomPicsHandler(BaseHandler):
 		art = []
 		for r in rs:
 			x = {}
-			pid = db.main.find_one({'AlbumId': r}, {'_id':0, 'PicId':1})
+			pid = ampdbserv.main.find_one({'AlbumId': r}, {'_id':0, 'PicId':1})
 			ace = pdb.pics.find_one({'PicId':pid['PicId']}, {'AlbumArtHttpPath':1, '_id':0})
 			try:	
 				x['thumbnail'] = ace['AlbumArtHttpPath']
 			except TypeError:
 				print(r)
 				#x["thumbnail"] = "./static/images/noartpic.jpg"
-			x['songs'] = [(song['Song'], song['SongId']) for song in db.main.find({'AlbumId':r}, {'Song':1, 'SongId':1, '_id':0})]
+			x['songs'] = [(song['Song'], song['SongId']) for song in ampdbserv.main.find({'AlbumId':r}, {'Song':1, 'SongId':1, '_id':0})]
 			art.append(x)
 		self.write(dict(rsamp=art))
 	
