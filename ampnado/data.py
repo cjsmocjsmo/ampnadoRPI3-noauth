@@ -224,7 +224,7 @@ class Data:
 		import logging
 		log = logging.getLogger("my-logger")
 		for s in svl:
-			log.in
+			log.info("this is s")
 			log.info(s)
 		data2 = pymongo.MongoClient(VIESDB_ADDR).ampviewsDB
 		try:
