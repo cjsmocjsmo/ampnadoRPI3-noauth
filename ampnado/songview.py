@@ -19,6 +19,9 @@
 ###############################################################################
 ###############################################################################
 from data import Data
+import logging
+log = logging.getLogger("my-logger")
+
 
 class SongView:
 	def __init__(self):
@@ -39,8 +42,10 @@ class SongView:
 		page = 1
 		
 		for s in self.tags:
-			print("this is self.tags")
-			print(s)
+			log.info("this is self.tags")
+			log.info(s)
+		
+		for s in self.tags:
 			count += 1
 			if count == int(OFC):
 				page += 1
