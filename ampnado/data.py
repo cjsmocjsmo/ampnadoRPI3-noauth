@@ -221,6 +221,11 @@ class Data:
 			data2.songalpha.insert_one(x)
 	
 	def viewsdb_songview_insert(self, svl):
+		import logging
+		log = logging.getLogger("my-logger")
+		for s in svl:
+			log.in
+			log.info(s)
 		data2 = pymongo.MongoClient(VIESDB_ADDR).ampviewsDB
 		try:
 			data2.songView.insert(svl)
