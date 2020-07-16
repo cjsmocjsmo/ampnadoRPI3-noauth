@@ -20,16 +20,16 @@
 ###############################################################################
 ####To background this script invoke it with this command
 ####nohup python3 server.py &>/dev/null &
+# import tornado.auth
 
 import os, random, hashlib, re, time, uuid, shutil
 from urllib.parse import urlparse, parse_qs
-# import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 from tornado.options import define, options, parse_command_line
 import pymongo
-import functions as Fun
+import functions
 
 MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
 VIESDB_ADDR = os.environ['AMP_VIEWSDB_ADDR'] 
@@ -37,15 +37,13 @@ PICDB_ADDR = os.environ['AMP_PICDB_ADDR']
 
 ampDBClient = pymongo.MongoClient(MONGO_ADDR)
 db = ampDBClient.ampnadoDB
-
 ampVDBClient = pymongo.MongoClient(VIESDB_ADDR)
 viewsdb = ampVDBClient.ampviewsDB
-
 ampPDBClient = pymongo.MongoClient(PICDB_ADDR)
 pdb = ampPDBClient.picdb
 
-FUN = Fun.Functions()
-RAND = Fun.RandomArtDb()
+FUN = functions.Functions()
+RAND = functions.RandomArtDb()
 
 define('server_port',
 	default= os.environ["AMP_SERVER_PORT"],

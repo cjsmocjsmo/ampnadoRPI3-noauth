@@ -41,6 +41,7 @@ viewsdb = ampVDBClient.ampviewsDB
 class FindMedia:
 
 	def db_filename_check(self, fn):
+		return None
 
 		
 	def find_music(self, ptm):
