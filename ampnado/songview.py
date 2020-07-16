@@ -49,6 +49,8 @@ class SongView:
 			x['Song'] = s['Song']
 			x['SongId'] = s['SongId']
 			x['Artist'] = s['Artist']
+			print("thisis x in songview")
+			print(x)
 			self.songviewlist.append(x)
 		songalphaoffsetlist1 = self.rm_dups_songalpha(self.songalphaoffsetlist)
 		self.insert_songalpha(songalphaoffsetlist1)
