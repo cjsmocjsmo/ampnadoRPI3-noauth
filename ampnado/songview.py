@@ -21,7 +21,7 @@
 from data import Data
 import logging
 log = logging.getLogger("my-logger")
-
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 class SongView:
 	def __init__(self):

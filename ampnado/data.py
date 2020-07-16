@@ -223,6 +223,7 @@ class Data:
 	def viewsdb_songview_insert(self, svl):
 		import logging
 		log = logging.getLogger("my-logger")
+		logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 		for s in svl:
 			log.info("this is s")
 			log.info(s)
