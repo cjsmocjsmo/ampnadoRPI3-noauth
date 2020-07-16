@@ -1,0 +1,9 @@
+*.pyc
+*.py~
+__pycache__
+*__pycache__
+
+/templates/*.html~
+/static/css/*.css~
+/static/js/*.js~
+/static/images/thumbnails/*
