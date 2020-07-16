@@ -19,10 +19,9 @@
 ###############################################################################
 ###############################################################################
 from data import Data
+
 import logging
-import os
-log = logging.getLogger("my-logger")
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+logging.basicConfig(level=logging.DEBUG)
 
 class SongView:
 	def __init__(self):
@@ -43,8 +42,8 @@ class SongView:
 		page = 1
 		
 		for s in self.tags:
-			log.info("this is self.tags")
-			log.info(s)
+			logging.debug("this is self.tags")
+			logging.debug(s)
 		
 		for s in self.tags:
 			count += 1
