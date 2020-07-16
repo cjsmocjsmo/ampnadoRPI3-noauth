@@ -20,6 +20,7 @@
 ###############################################################################
 from data import Data
 import logging
+import os
 log = logging.getLogger("my-logger")
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
