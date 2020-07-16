@@ -20,30 +20,32 @@
 ###############################################################################
 ####To background this script invoke it with this command
 ####nohup python3 server.py &>/dev/null &
-# import tornado.auth
 
 import os, random, hashlib, re, time, uuid, shutil
 from urllib.parse import urlparse, parse_qs
+import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 from tornado.options import define, options, parse_command_line
 import pymongo
-import functions
+import functions as Fun
 
-MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
-VIESDB_ADDR = os.environ['AMP_VIEWSDB_ADDR'] 
-PICDB_ADDR = os.environ['AMP_PICDB_ADDR']
-
-ampDBClient = pymongo.MongoClient(MONGO_ADDR)
+ampDBClient = pymongo.MongoClient("mongodb://db:27017/ampnadoDB")
 db = ampDBClient.ampnadoDB
-ampVDBClient = pymongo.MongoClient(VIESDB_ADDR)
+
+ampVDBClient = pymongo.MongoClient("mongodb://db:27017/ampviewsDB")
 viewsdb = ampVDBClient.ampviewsDB
-ampPDBClient = pymongo.MongoClient(PICDB_ADDR)
+
+ampPDBClient = pymongo.MongoClient("mongodb://db:27017/picdb")
 pdb = ampPDBClient.picdb
 
-FUN = functions.Functions()
-RAND = functions.RandomArtDb()
+
+
+
+FUN = Fun.Functions()
+RAND = Fun.RandomArtDb()
+
 
 define('server_port',
 	default= os.environ["AMP_SERVER_PORT"],
@@ -72,10 +74,8 @@ class Application(tornado.web.Application):
 		handlers = [
 			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': mpath}),
 			(r"/ampnado", MainHandler),
-
-			# (r"/login", LoginHandler),
-			# (r"/logout", LogoutHandler),
-
+			(r"/login", LoginHandler),
+			(r"/logout", LogoutHandler),
 			(r"/RandomPics", RandomPicsHandler),
 			(r"/ArtistAlpha", ArtistAlphaHandler),
 			(r"/InitialArtistInfo", InitialArtistInfoHandler),
@@ -109,11 +109,9 @@ class Application(tornado.web.Application):
 #			template_path = os.path.join(os.path.dirname(__file__), "templates"),
 #			template_path = os.environ["AMP_PROGRAM_PATH"] + "/ampnado/templates",
 			template_path = "./templates",
-			# login_url = "/login",
-			login_url = "/ampnado",
+			login_url = "/login",
 			cookie_secret = hashlib.sha512(str(random.randrange(100)).encode('utf-8')).hexdigest(),
-			# xsrf_cookies = True,
-			xsrf_cookies = False,
+			xsrf_cookies = True,
 			debug = True,
 		)
 		tornado.web.Application.__init__(self, handlers, **settings)
@@ -123,6 +121,7 @@ class BaseHandler(tornado.web.RequestHandler):
 		return self.get_secure_cookie('ampnado')
 
 class MainHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		self.render('ampnado.html')
 
@@ -130,28 +129,28 @@ class LoginHandler(BaseHandler):
 	def get(self):
 		self.render('login.html')	
 
-	# def check_value(self, a_phrase):
-	# 	dbun = re.match(r'^[\w]+$', a_phrase)
-	# 	if dbun.group(0): return True
-	# 	else: return False
+	def check_value(self, a_phrase):
+		dbun = re.match(r'^[\w]+$', a_phrase)
+		if dbun.group(0): return True
+		else: return False
 
-	# def post(self):
-	# 	creds = self.get_argument('username'), self.get_argument('password')
-	# 	if self.check_value(creds[0]) and self.check_value(creds[1]):
-	# 		phash = str(hashlib.sha512(creds[1].encode('utf-8')).hexdigest())
-	# 		try:
-	# 			uid = db.user_creds.find_one({'username': creds[0], 'password': phash})
-	# 			self.set_secure_cookie('ampnado', uid['user_id'])
-	# 			self.redirect('/ampnado')
-	# 		except TypeError:
-	# 			self.render('login.html')
-	# 	else:
-	# 		self.render('login.html')
+	def post(self):
+		creds = self.get_argument('username'), self.get_argument('password')
+		if self.check_value(creds[0]) and self.check_value(creds[1]):
+			phash = str(hashlib.sha512(creds[1].encode('utf-8')).hexdigest())
+			try:
+				uid = db.user_creds.find_one({'username': creds[0], 'password': phash})
+				self.set_secure_cookie('ampnado', uid['user_id'])
+				self.redirect('/ampnado')
+			except TypeError:
+				self.render('login.html')
+		else:
+			self.render('login.html')
 	
-# class LogoutHandler(BaseHandler):
-# 	def get(self):
-# 		self.clear_cookie("ampnado")
-# 		self.redirect(self.get_argument('next', 'login'))
+class LogoutHandler(BaseHandler):
+	def get(self):
+		self.clear_cookie("ampnado")
+		self.redirect(self.get_argument('next', 'login'))
 
 class AllPlaylistsHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -159,6 +158,7 @@ class AllPlaylistsHandler(BaseHandler):
 		try: return [(d['playlistname'], d['playlistid']) for d in db.playlists.find({}).sort([('playlistname', pymongo.ASCENDING)])]
 		except KeyError: return []
 		
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		plname = yield self.getpls()
@@ -167,6 +167,7 @@ class AllPlaylistsHandler(BaseHandler):
 		else: self.write(dict(plnames=plnamez))
 
 class ArtistAlphaHandler(BaseHandler):
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		artal = viewsdb.artalpha.find_one({}, {'artalpha':1, '_id':0})
@@ -174,6 +175,7 @@ class ArtistAlphaHandler(BaseHandler):
 		self.write(dict(artal=artal))
 
 class InitialArtistInfoHandler(BaseHandler):
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
@@ -186,6 +188,7 @@ class ArtistInfoHandler(BaseHandler):
 		artinfo = [art for art in viewsdb.artistView.find({'Page': sel}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
 		return artinfo
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -193,6 +196,7 @@ class ArtistInfoHandler(BaseHandler):
 		self.write(dict(arts=arts))
 
 class AlbumAlphaHandler(BaseHandler):
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		albal = viewsdb.albalpha.find_one({}, {'albalpha':1, '_id':0})
@@ -200,6 +204,7 @@ class AlbumAlphaHandler(BaseHandler):
 		self.write(dict(albal=albal))
 
 class InitialAlbumInfoHandler(BaseHandler):
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		ial = [album for album in viewsdb.albumView.find({}, {'_id':0}).limit(off_set)]
@@ -212,6 +217,7 @@ class AlbumInfoHandler(BaseHandler):
 		albinfo = [alb for alb in viewsdb.albumView.find({'Page': sel}, {'_id':0})]
 		return albinfo
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -219,6 +225,7 @@ class AlbumInfoHandler(BaseHandler):
 		self.write(dict(albs=albs))
 
 class SongAlphaHandler(BaseHandler):
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		songal = viewsdb.songalpha.find_one({}, {'songalpha':1, '_id':0})
@@ -226,6 +233,7 @@ class SongAlphaHandler(BaseHandler):
 		self.write(dict(songal=songal))
 
 class InitialSongInfoHandler(BaseHandler):
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		ias = [song for song in viewsdb.songView.find({}, {'_id':0}).limit(off_set)]		
@@ -238,6 +246,7 @@ class SongInfoHandler(BaseHandler):
 		songinfo = [song for song in viewsdb.songView.find({'Page': sel}, {'_id':0})]
 		return songinfo
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -258,6 +267,7 @@ class ImageSongsForAlbumHandler(BaseHandler):
 		foo['songs'] = [(t['Song'], t['SongId']) for t in db.main.find({'AlbumId':a_query}, {'Song':1, 'SongId':1, '_id':0})]			
 		return foo
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -273,6 +283,7 @@ class PathArtHandler(BaseHandler):
 	def get_pic_info(self, a_picid):		
 		return pdb.pics.find_one({'PicId':a_picid}, {'_id':0, 'AlbumArtHttpPath':1})
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -291,6 +302,7 @@ class AllPlaylistSongsFromDBHandler(BaseHandler):
 		except KeyError: return []
 		except TypeError: return []
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine		
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -316,6 +328,7 @@ class AddPlayListNameToDBHandler(BaseHandler):
 	def _get_playlists(self):
 		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({})]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine		
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -337,6 +350,7 @@ class AddSongsToPlistDBHandler(BaseHandler):
 			db.playlists.update({'playlistid': a_plid},
 				{'playlistname' : playlist['playlistname'], 'playlistid' : a_plid, 'songs' : playlist['songs']})
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine	
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -362,6 +376,7 @@ class AddRandomPlaylistHandler(BaseHandler):
 		db.playlists.insert(pl)
 		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({}, {'_id':0})]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -389,6 +404,7 @@ class CreatePlayerPlaylistHandler(BaseHandler):
 			return fart
 		except KeyError: return []
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -405,6 +421,7 @@ class DeletePlaylistFromDBHandler(BaseHandler):
 	def get_pl_list(self, plid):
 		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({})]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -431,6 +448,7 @@ class DeleteSongFromPlaylistHandler(BaseHandler):
 	def _get_new_playlist(self, pln):
 		return [playlist['songs'] for playlist in db.playlists.find({'playlistname': pln}, {'songs.song':1, 'songs.songid':1})]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -446,6 +464,7 @@ class ArtistSearchHandler(BaseHandler):
 		search = viewsdb.command('text', 'artistView', search=artsv)
 		return [{ 'artist': sea['obj']['artist'],  'artistid': sea['obj']['artistid'], 'albums': sea['obj']['albums']} for sea in search['results']]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -458,6 +477,7 @@ class AlbumSearchHandler(BaseHandler):
 		search = viewsdb.command('text', 'albumView', search=albsv)
 		return [{'artist': sea['obj']['artist'], 'album': sea['obj']['album'], 'albumid': sea['obj']['albumid'], 'thumbnail': sea['obj']['albumartHttpPath'], 'songs': sea['obj']['songs'], 'numsongs': sea['obj']['numsongs']} for sea in search['results']]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -470,6 +490,7 @@ class SongSearchHandler(BaseHandler):
 		search = db.command('text', 'main', search=sv)
 		return [{'artist': sea['obj']['Artist'], 'song': sea['obj']['Song'], 'songid': sea['obj']['SongId']} for sea in search['results']]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -485,6 +506,7 @@ class RamdomAlbumPicPlaySongHandler(BaseHandler):
 	def get_pic_info(self, pid):
 		return pdb.pics.find_one({"PicId": pid['PicId']}, {"_id":0, "AlbumArtHttpPath":1})
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
@@ -525,6 +547,7 @@ class RandomPicsHandler(BaseHandler):
 			yield self.update_db(tid[0])
 			return tid[1]
 
+	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		rs = yield self.get_rand_alb_list()

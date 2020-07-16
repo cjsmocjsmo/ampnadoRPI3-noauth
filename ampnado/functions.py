@@ -25,54 +25,44 @@ try: from mutagen import File
 except ImportError: from mutagenx import File
 import metatags as MT
 
-MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
-VIESDB_ADDR = os.environ['AMP_VIEWSDB_ADDR'] 
-
-
-
-ampDBClient = MongoClient(MONGO_ADDR)
+ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
 db = ampDBClient.ampnadoDB
 
-ampVDBClient = MongoClient(VIESDB_ADDR)
+ampVDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
 viewsdb = ampVDBClient.ampviewsDB
 
-
-
 class FindMedia:
-
-	def db_filename_check(self, fn):
-		return None
-
 		
 	def find_music(self, ptm):
 		try:
+			mlist = []
+			print('THIS IS PTM \n')
+			print(ptm)
 			for (paths, dirs, files) in os.walk(ptm, followlinks=True):
 				for filename in files:
 					print("Processing:\n %s" % filename)
 					fnn = os.path.join(paths, filename)
-					if Data.filename_in_db:
-						print("File already in db")
-					else:
-						ext = os.path.splitext(fnn)[1].lower()
-						if ext == ".mp3":
-							Meta = MT.FileMeta(fnn)
-							Mp3 = MT.MP3Tags(fnn)
-							x = {
-								"Filename": fnn,
-								"Extension": ext,
-								"Size": Meta.Size,
-								"DirPath": Meta.DirPath,
-								"SongId": Meta.SongId,
-								"Artist": Mp3.Artist,
-								"Album": Mp3.Album,
-								"Song": Mp3.Song,
-								"Track": Mp3.Track,
-								"PicId": "",
-								"ArtistId": "",
-								"AlbumId": "",
-								"HttpMusicPath": "/" + fnn.split("/", 4)[4],
-							}
-							db.main.insert(x)
+					ext = os.path.splitext(fnn)[1].lower()
+					if ext == ".mp3":
+						Meta = MT.FileMeta(fnn)
+						Mp3 = MT.MP3Tags(fnn)
+						x = {
+							"Filename": fnn,
+							"Extension": ext,
+							"Size": Meta.Size,
+							"DirPath": Meta.DirPath,
+							"SongId": Meta.SongId,
+							"Artist": Mp3.Artist,
+							"Album": Mp3.Album,
+							"Song": Mp3.Song,
+							"Track": Mp3.Track,
+							"PicId": "",
+							"ArtistId": "",
+							"AlbumId": "",
+							"HttpMusicPath": "/" + fnn.split("/", 4)[4],
+						}
+						mlist.append(x)
+			db.main.insert_many(mlist)
 		except TypeError:
 			exit()
 
@@ -198,6 +188,11 @@ class Functions:
 	def get_bytes(self):
 		return Data().tags_aggregate_filesize()
 
+	# def get_ids(self):
+	# 	alltags = Data().tags_all_id()
+	# 	allt = [at['_id'] for at in alltags]
+	# 	return allt
+
 	def hash_func(self, a_string):
 		return str(hashlib.sha512(a_string.encode('utf-8')).hexdigest())
 
@@ -208,6 +203,18 @@ class Functions:
 		hash4 = ''.join((hash1, hash2, hash3))
 		hash5 = self.hash_func(hash4)
 		return auname, hash2, hash5
+		
+#		allt = []
+#		for at in alltags: 
+#			tid = at['_id']
+#			allt.append(tid)
+#		return allt
+
+	# def create_catalog_db(self, cdict):
+	# 	bytes = self.get_bytes()
+	# 	cdict['catobjList'] = self.get_ids()
+	# 	cdict['catTotal'] = self.convert_bytes(bytes['result'][0]['total']),
+	# 	self.insert_catalog_info(cdict)
 
 	def insert_user(self, a_uname, a_pword):
 		h = self.gen_hash(a_uname, a_pword)

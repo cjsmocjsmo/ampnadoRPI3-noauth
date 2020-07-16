@@ -20,24 +20,20 @@
 ###############################################################################
 import os, time, argparse
 #import inputs as gp
-import functions
-import findjpgs
+import functions as fun
+import findjpgs as fj
 from pymongo import MongoClient
 from pprint import pprint
 from data import Data
 
-MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
-VIESDB_ADDR = os.environ['AMP_VIEWSDB_ADDR'] 
-PICDB_ADDR = os.environ['AMP_PICDB_ADDR']
-
-ampDBClient = MongoClient(MONGO_ADDR)
+ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
 ampDBClient.drop_database("ampnadoDB")
 
-ampvDBClient = MongoClient(VIESDB_ADDR)
+ampvDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
 ampvDBClient.drop_database("ampviewsDB")
 #client.drop_database("config")
 
-picDBClient = MongoClient(PICDB_ADDR)
+picDBClient = MongoClient("mongodb://db:27017/picdb")
 picDBClient.drop_database("picdb")
 
 db = ampDBClient.ampnadoDB
@@ -45,9 +41,9 @@ db = ampDBClient.ampnadoDB
 class SetUp():
 	def __init__(self):
 		print("SetUp HAS STARTED")
-		FUN = functions.FindMedia()
+		FUN = fun.FindMedia()
 		self.FUN = FUN
-		FUNKY = functions.Functions()
+		FUNKY = fun.Functions()
 		FUNKY.insert_user(os.environ["AMP_USERNAME"], os.environ["AMP_PASSWORD"])
 
 
@@ -59,9 +55,9 @@ class SetUp():
 		#self.set_env_vars()
 		self.FUN.find_music(os.environ["AMP_MEDIA_PATH"])
 		
-		FindJpgs = findjpgs.FindMissingArt()
-		FindJpgs.globstuff()
-		picdics = FindJpgs.PicDics
+		FJ = fj.FindMissingArt()
+		FJ.globstuff()
+		picdics = FJ.PicDics
 		Data().tags_update_artID(picdics)
 
 		btime = time.time()
@@ -126,7 +122,7 @@ class SetUp():
 #		#this is for removeuser
 #		try:
 #			if self.args.remove_user_name and self.args.remove_user_password:
-#				h = self.FUNctions.gen_hash(self.args.remove_user_name, self.args.remove_user_password)
+#				h = self.FUN.gen_hash(self.args.remove_user_name, self.args.remove_user_password)
 #				ruser = self.GI._remove_user(h[0], h[1])
 #		except AttributeError: pass
 

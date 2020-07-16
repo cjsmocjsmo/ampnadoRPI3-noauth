@@ -22,8 +22,7 @@ import os, base64, glob
 from PIL import Image
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
-client = MongoClient(MONGO_ADDR)
+client = MongoClient("mongodb://db:27017/ampnaodDB")
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 

@@ -20,9 +20,6 @@
 ###############################################################################
 from data import Data
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
 class SongView:
 	def __init__(self):
 		self.tags = Data().tags_all_song_songid_artist()
@@ -31,8 +28,7 @@ class SongView:
 
 	def rm_dups_songalpha(self, x): return list(set(x))
 	
-	def insert_songalpha(self, z):
-		Data().viewsdb_songalpha_insert(dict(songalpha=z))
+	def insert_songalpha(self, z): Data().viewsdb_songalpha_insert(dict(songalpha=z))
 	
 	def insert_songview(self, w):
 		Data().viewsdb_songview_insert(w)
@@ -40,10 +36,6 @@ class SongView:
 	def create_songView_db(self, OFC):
 		count = 0
 		page = 1
-		
-		for s in self.tags:
-			logging.debug("this is self.tags")
-			logging.debug(s)
 		
 		for s in self.tags:
 			count += 1
@@ -56,8 +48,6 @@ class SongView:
 			x['Song'] = s['Song']
 			x['SongId'] = s['SongId']
 			x['Artist'] = s['Artist']
-			print("thisis x in songview")
-			print(x)
 			self.songviewlist.append(x)
 		songalphaoffsetlist1 = self.rm_dups_songalpha(self.songalphaoffsetlist)
 		self.insert_songalpha(songalphaoffsetlist1)
