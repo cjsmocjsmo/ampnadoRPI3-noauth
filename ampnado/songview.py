@@ -37,9 +37,10 @@ class SongView:
 	def create_songView_db(self, OFC):
 		count = 0
 		page = 1
-		print("this is self.tags")
-		print(self.tags)
+		
 		for s in self.tags:
+			print("this is self.tags")
+			print(s)
 			count += 1
 			if count == int(OFC):
 				page += 1
