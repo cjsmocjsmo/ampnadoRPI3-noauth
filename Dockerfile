@@ -19,6 +19,6 @@ RUN \
 		python3-pil \
 		python3-pip
 RUN \
-	pip3 install pymongo==3.4.0 tornado==3.2.1 mutagen==1.43.0
+	pip3 install pymongo==3.4.0 tornado==3.2.1 mutagen==1.43.0 Pillow==6.2.2
 
 CMD [ "python3", "/usr/share/Ampnado/ampnado.py" ]
