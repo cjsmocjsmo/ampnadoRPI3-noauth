@@ -4,12 +4,12 @@ services:
   ampdbserv:
     image: andresvidal/rpi3-mongodb3
     networks:
-      - ampnadorpi
+      - ampnadorpi-noauth
     ports:
       - 27017:27017
 
   ampserv:
-    image: ampnadorpi:latest
+    image: ampnadorpi-noauth:0.1
     build: .
     environment:
       - AMP_PROGRAM_PATH=/home/pi/Desktop/Ampnado
@@ -27,19 +27,19 @@ services:
       - AMP_USERNAME=admin
       - AMP_PASSWORD=ampnado
     networks:
-      - ampnadorpi
+      - ampnadorpi-noauth
     ports:
       - 6789:6789
     volumes:
-      - ampnadorpivol:/usr/src/ampnado/Music
+      - ampnadorpi-noauthvol:/usr/src/ampnado/Music
     depends_on:
       - ampdbserv
 
 networks:
-  ampnadorpi:
+  ampnadorpi-noauth:
 
 volumes:
-  ampnadorpivol:
+  ampnadorpi-noauthvol:
     driver: local
     driver_opts:
       type: none
