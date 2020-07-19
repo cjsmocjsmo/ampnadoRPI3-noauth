@@ -99,8 +99,7 @@ class Application(tornado.web.Application):
 class BaseHandler(tornado.web.RequestHandler):
 	def get_current_user(self):
 		self.set_header("Access-Control-Allow-Origin", "*")
-        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-        self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		return
 		# return self.get_secure_cookie('ampnado')
 
