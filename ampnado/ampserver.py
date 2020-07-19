@@ -91,7 +91,7 @@ class Application(tornado.web.Application):
 			template_path = "./templates",
 			login_url = "/login",
 			cookie_secret = hashlib.sha512(str(random.randrange(100)).encode('utf-8')).hexdigest(),
-			xsrf_cookies = True,
+			xsrf_cookies = False,
 			debug = True,
 		)
 		tornado.web.Application.__init__(self, handlers, **settings)
@@ -99,9 +99,9 @@ class Application(tornado.web.Application):
 class BaseHandler(tornado.web.RequestHandler):
 	def get_current_user(self):
 		self.set_header("Access-Control-Allow-Origin", "*")
+		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		return
-		# return self.get_secure_cookie('ampnado')
+
 
 class MainHandler(BaseHandler):
 	def get(self):
