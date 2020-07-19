@@ -101,7 +101,7 @@ class BaseHandler(tornado.web.RequestHandler):
 		self.set_header("Access-Control-Allow-Origin", "*")
 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-
+		self.set_header('Content-Type', 'application/json')
 
 class MainHandler(BaseHandler):
 	def get(self):
@@ -205,6 +205,10 @@ class SongAlphaHandler(BaseHandler):
 		songal = viewsdb.songalpha.find_one({}, {'songalpha':1, '_id':0})
 		songal = songal['songalpha']
 		self.write(dict(songal=songal))
+		self.set_header("Access-Control-Allow-Origin", "*")
+		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		self.set_header('Content-Type', 'application/json')
 
 class InitialSongInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
