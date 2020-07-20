@@ -87,7 +87,8 @@ class Application(tornado.web.Application):
 			(r"/SongSearch", SongSearchHandler),
 		]
 		settings = dict(
-			static_path = "./static",
+			static_path = os.path.join(os.path.dirname(__file__), "static"),
+			# static_path = "./static",
 			template_path = "./templates",
 			login_url = "/login",
 			cookie_secret = hashlib.sha512(str(random.randrange(100)).encode('utf-8')).hexdigest(),
