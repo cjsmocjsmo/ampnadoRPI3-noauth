@@ -36,6 +36,8 @@ class Thumbnails():
 			im2.save(location, "JPEG")
 		except OSError:
 			pass
+		if os.path.exists(location):
+			print("FUCK YEA LOCATION EXISTS I JUST MADE THE JPG")
 
 	def get_thumb_size(self, location):
 		try:
@@ -60,6 +62,7 @@ class Thumbnails():
 		if p["PicPath"] != None:
 			if os.path.exists(p["PicPath"]):
 				self.get_smallthumb(d2thumb, p["NewPicPath"], p["PicPath"])
+				print("this is newpicpath")
 				print(p["NewPicPath"])
 			else:
 		 		print("WTF\n WTF\n WTF\n %s" % p["NewPicPath"])
@@ -70,9 +73,10 @@ class Thumbnails():
 		# 	print("p[NewPicPath] exists")
 			
 		p['Image_Size'] = self.get_thumb_size(p["NewPicPath"])
-		p['Smallthumb'] = self.get_b64_image(p["NewPicPath"])
 		print(p['Image_Size'])
+		p['Smallthumb'] = self.get_b64_image(p["NewPicPath"])
 		print(p['Smallthumb'])
+
 		return p
 		# if os.path.exists(loc1):
 		# 	print("loc1 exists")
