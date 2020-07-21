@@ -95,7 +95,7 @@ class FindMissingArt:
 		my_globs = list(mg)
 		Thumb = ct.Thumbnails()
 		mythumbs = [Thumb.create_thumbs(m) for m in my_globs]
-		# print("THIS IS MYTHUMBS \n")
-		# print(mythumbs)
-		pdb.pics.insert_many(mythumbs)
-		Data().tags_update_artID(my_globs)
+		print("THIS IS MYTHUMBS \n")
+		print(mythumbs)
+		# pdb.pics.insert_many(mythumbs)
+		# Data().tags_update_artID(my_globs)

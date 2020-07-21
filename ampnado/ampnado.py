@@ -57,74 +57,74 @@ class SetUp():
 		
 		FJ = fj.FindMissingArt()
 		FJ.globstuff()
-		picdics = FJ.PicDics
-		Data().tags_update_artID(picdics)
+# 		picdics = FJ.PicDics
+# 		Data().tags_update_artID(picdics)
 
-		btime = time.time()
-		maintime = btime - atime
-		print("Main DB setup time %s" % maintime)
+# 		btime = time.time()
+# 		maintime = btime - atime
+# 		print("Main DB setup time %s" % maintime)
 		
-		from functions import AddArtistId
-		AddArtistId().add_artistids()
-		ctime = time.time()
-		artidtime = ctime - atime
-		print("AddArtistId time %s" % artidtime)
+# 		from functions import AddArtistId
+# 		AddArtistId().add_artistids()
+# 		ctime = time.time()
+# 		artidtime = ctime - atime
+# 		print("AddArtistId time %s" % artidtime)
 
-		from functions import AddAlbumId
-		AddAlbumId().add_albumids()
-		dtime = time.time()
-		albidtime = dtime - atime
-		print("AddAlbumId time %s" % albidtime)
+# 		from functions import AddAlbumId
+# 		AddAlbumId().add_albumids()
+# 		dtime = time.time()
+# 		albidtime = dtime - atime
+# 		print("AddAlbumId time %s" % albidtime)
 
-		from artistview import ArtistView
-		from artistview import ArtistChunkIt
-		AV = ArtistView().main()
-		ArtistChunkIt().main(AV, os.environ["AMP_OFFSET_SIZE"])
-		etime = time.time()
-		artistviewtime = etime - atime
-		print("Artistview time %s" % artistviewtime)		
+# 		from artistview import ArtistView
+# 		from artistview import ArtistChunkIt
+# 		AV = ArtistView().main()
+# 		ArtistChunkIt().main(AV, os.environ["AMP_OFFSET_SIZE"])
+# 		etime = time.time()
+# 		artistviewtime = etime - atime
+# 		print("Artistview time %s" % artistviewtime)		
 
-		from albumview import AlbumView
-		from albumview import AlbumChunkIt
-		ALBV = AlbumView().main()
-		AlbumChunkIt().main(ALBV, os.environ["AMP_OFFSET_SIZE"])
-		ftime = time.time()
-		albviewtime = ftime - atime
-		print("Albumview time %s" % albviewtime)		
+# 		from albumview import AlbumView
+# 		from albumview import AlbumChunkIt
+# 		ALBV = AlbumView().main()
+# 		AlbumChunkIt().main(ALBV, os.environ["AMP_OFFSET_SIZE"])
+# 		ftime = time.time()
+# 		albviewtime = ftime - atime
+# 		print("Albumview time %s" % albviewtime)		
 
-		from songview import SongView
-		SongView().create_songView_db(os.environ["AMP_OFFSET_SIZE"])
-		gtime = time.time()
-		songviewtime = gtime - atime
-		print("Songview time %s" % songviewtime)
+# 		from songview import SongView
+# 		SongView().create_songView_db(os.environ["AMP_OFFSET_SIZE"])
+# 		gtime = time.time()
+# 		songviewtime = gtime - atime
+# 		print("Songview time %s" % songviewtime)
 		
-		from functions import Indexes
-		Indexes().creat_db_indexes()
-		htime = time.time()
-		indextime = htime - atime
-		print("Index time %s" % indextime)
+# 		from functions import Indexes
+# 		Indexes().creat_db_indexes()
+# 		htime = time.time()
+# 		indextime = htime - atime
+# 		print("Index time %s" % indextime)
 		
-		from functions import DbStats
-		DbStats().db_stats()
-		itime = time.time()
-		statstime = itime - atime
-		print("DBStats time is %s" % statstime)
+# 		from functions import DbStats
+# 		DbStats().db_stats()
+# 		itime = time.time()
+# 		statstime = itime - atime
+# 		print("DBStats time is %s" % statstime)
 
-		from functions import RandomArtDb
-		RandomArtDb().create_random_art_db()
-		jtime = time.time()
-		ranarttime = jtime - atime
-		print("RandomArtDB time is %s" % ranarttime)
-
-
+# 		from functions import RandomArtDb
+# 		RandomArtDb().create_random_art_db()
+# 		jtime = time.time()
+# 		ranarttime = jtime - atime
+# 		print("RandomArtDB time is %s" % ranarttime)
 
 
-#		#this is for removeuser
-#		try:
-#			if self.args.remove_user_name and self.args.remove_user_password:
-#				h = self.FUN.gen_hash(self.args.remove_user_name, self.args.remove_user_password)
-#				ruser = self.GI._remove_user(h[0], h[1])
-#		except AttributeError: pass
+
+
+# #		#this is for removeuser
+# #		try:
+# #			if self.args.remove_user_name and self.args.remove_user_password:
+# #				h = self.FUN.gen_hash(self.args.remove_user_name, self.args.remove_user_password)
+# #				ruser = self.GI._remove_user(h[0], h[1])
+# #		except AttributeError: pass
 
 		ptime = time.time()
 		t = ptime - atime
