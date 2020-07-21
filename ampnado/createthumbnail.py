@@ -37,8 +37,6 @@ class Thumbnails():
 			im2.save(location, "JPEG")
 		except OSError:
 			pass
-		if os.path.exists(location):
-			print("FUCK YEA LOCATION EXISTS I JUST MADE THE JPG")
 
 	def get_thumb_size(self, location):
 		try:
@@ -56,7 +54,6 @@ class Thumbnails():
 			return "None"
 
 	def create_thumbs(self, p):
-		pprint(p)
 		loc1 = os.environ["AMP_PROGRAM_PATH"] +" temp/" + p["PicId"] + ".jpg"
 		if os.path.exists(loc1):
 			print("yes loc1 exists removing")
@@ -65,32 +62,10 @@ class Thumbnails():
 		if p["PicPath"] != None:
 			if os.path.exists(p["PicPath"]):
 				self.get_smallthumb(d2thumb, p["NewPicPath"], p["PicPath"])
-				print("this is newpicpath")
-				print(p["PicPath"])
 				print(p["NewPicPath"])
 			else:
 		 		print("WTF\n WTF\n WTF\n %s" % p["NewPicPath"])
-		
-		# p['Image_Size'] = ""
-		# p['Smallthumb'] = ""
-		# if os.path.exists(p["NewPicPath"]):
-		# 	print("p[NewPicPath] exists")
-			
 		p['Image_Size'] = self.get_thumb_size(p["NewPicPath"])
-		print(p['Image_Size'])
 		p['Smallthumb'] = self.get_b64_image(p["NewPicPath"])
-		print(p['Smallthumb'])
-
+		pprint(p)
 		return p
-		# if os.path.exists(loc1):
-		# 	print("loc1 exists")
-		# 	p['Image_Size'] = self.get_thumb_size(loc1)
-		# 	p['Smallthumb'] = self.get_b64_image(loc1)
-		# 	print(p['Image_Size'])
-		# 	print(p['Smallthumb'])
-		# 	return p
-			
-		# print("THIS IS SMALLTHUMB P \n")
-		# print(p['Image_Size'])
-		# print(p['Smallthumb'])
-		# return p
