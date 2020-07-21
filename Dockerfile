@@ -5,6 +5,8 @@ COPY ampnado /usr/share/Ampnado
 WORKDIR /usr/share/Ampnado
 RUN \
 	chmod -R 0755 /usr/share/Ampnado && \
-	chown -R root:root /usr/share/Ampnado
+	chmod -R 0755 /usr/share/Ampnado/static && \
+	chmod -R 0755 /usr/share/Ampnado/static/images && \
+	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails
 
 CMD [ "python3", "/usr/share/Ampnado/ampnado.py" ]
