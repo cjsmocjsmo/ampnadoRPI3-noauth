@@ -66,4 +66,6 @@ class Thumbnails():
 		if os.path.exists(loc1):
 		 	p['Image_Size'] = self.get_thumb_size(loc1)
 		 	p['Smallthumb'] = self.get_b64_image(loc1)
+		print("THIS IS SMALLTHUMB \n")
+		print(p)
 		return p
