@@ -1,6 +1,11 @@
 FROM amp-build-deps:latest
 
-RUN mkdir /usr/share/Ampnado
+RUN \
+	mkdir /usr/share/Ampnado && \
+	mkdir /usr/share/Ampnado/static && \
+	mkdir /usr/share/Ampnado/static/images && \
+	mkdir /usr/share/Ampnado/static/images/thumbnails
+
 COPY ampnado /usr/share/Ampnado
 WORKDIR /usr/share/Ampnado
 RUN \
