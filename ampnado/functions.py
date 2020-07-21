@@ -25,10 +25,10 @@ try: from mutagen import File
 except ImportError: from mutagenx import File
 import metatags as MT
 
-ampDBClient = MongoClient("mongodb://ampdbserv:27017/ampnadoDB")
+ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
 db = ampDBClient.ampnadoDB
 
-ampVDBClient = MongoClient("mongodb://ampdbserv:27017/ampviewsDB")
+ampVDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
 viewsdb = ampVDBClient.ampviewsDB
 
 class FindMedia:

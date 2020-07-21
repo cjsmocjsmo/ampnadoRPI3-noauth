@@ -26,14 +26,14 @@ from pymongo import MongoClient
 from pprint import pprint
 from data import Data
 
-ampDBClient = MongoClient("mongodb://ampdbserv:27017/ampnadoDB")
+ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
 ampDBClient.drop_database("ampnadoDB")
 
-ampvDBClient = MongoClient("mongodb://ampdbserv:27017/ampviewsDB")
+ampvDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
 ampvDBClient.drop_database("ampviewsDB")
 #client.drop_database("config")
 
-picDBClient = MongoClient("mongodb://ampdbserv:27017/picdb")
+picDBClient = MongoClient("mongodb://db:27017/picdb")
 picDBClient.drop_database("picdb")
 
 db = ampDBClient.ampnadoDB

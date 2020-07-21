@@ -22,7 +22,7 @@ import os, base64, glob
 from PIL import Image
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-client = MongoClient("mongodb://ampdbserv:27017/ampnaodDB")
+client = MongoClient("mongodb://db:27017/ampnaodDB")
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
