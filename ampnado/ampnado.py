@@ -52,24 +52,26 @@ class SetUp():
 	def main(self):
 		atime = time.time()
 		print(os.environ)
-		#self.set_env_vars()
 		self.FUN.find_music(os.environ["AMP_MEDIA_PATH"])
 		
 		FJ = fj.FindMissingArt()
 		FJ.globstuff()
-		picdics = FJ.PicDics
-		print(picdics)
+
+		#Not needed 
+		# picdics = FJ.PicDics
+		# print(picdics)
 # 		Data().tags_update_artID(picdics)
 
-# 		btime = time.time()
-# 		maintime = btime - atime
-# 		print("Main DB setup time %s" % maintime)
+
+		btime = time.time()
+		maintime = btime - atime
+		print("Main DB setup time %s" % maintime)
 		
-# 		from functions import AddArtistId
-# 		AddArtistId().add_artistids()
-# 		ctime = time.time()
-# 		artidtime = ctime - atime
-# 		print("AddArtistId time %s" % artidtime)
+		from functions import AddArtistId
+		AddArtistId().add_artistids()
+		ctime = time.time()
+		artidtime = ctime - atime
+		print("AddArtistId time %s" % artidtime)
 
 # 		from functions import AddAlbumId
 # 		AddAlbumId().add_albumids()
