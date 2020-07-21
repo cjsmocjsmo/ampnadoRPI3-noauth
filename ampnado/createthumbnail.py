@@ -21,7 +21,6 @@
 import os, base64, glob
 from PIL import Image
 from pymongo import MongoClient, ASCENDING, DESCENDING
-from pprint import pprint
 
 client = MongoClient("mongodb://db:27017/ampnaodDB")
 db = client.ampnadoDB
@@ -67,5 +66,4 @@ class Thumbnails():
 		 		print("WTF\n WTF\n WTF\n %s" % p["NewPicPath"])
 		p['Image_Size'] = self.get_thumb_size(p["NewPicPath"])
 		p['Smallthumb'] = self.get_b64_image(p["NewPicPath"])
-		pprint(p)
 		return p
