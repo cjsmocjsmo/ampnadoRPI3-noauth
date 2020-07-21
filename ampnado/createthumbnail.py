@@ -80,6 +80,7 @@ class Thumbnails():
 			p['Image_Size'] = self.get_thumb_size(loc1)
 			p['Smallthumb'] = self.get_b64_image(loc1)
 			return p
+			
 		# print("THIS IS SMALLTHUMB P \n")
 		# print(p['Image_Size'])
 		# print(p['Smallthumb'])
