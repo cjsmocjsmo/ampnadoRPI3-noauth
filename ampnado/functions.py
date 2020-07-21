@@ -38,7 +38,8 @@ class FindMedia:
 			mlist = []
 			print('THIS IS PTM \n')
 			print(ptm)
-			for (paths, dirs, files) in os.walk(ptm, followlinks=True):
+			for (paths, files) in os.walk(ptm, followlinks=True):
+			# for (paths, dirs, files) in os.walk(ptm, followlinks=True):
 				for filename in files:
 					print("Processing:\n %s" % filename)
 					fnn = os.path.join(paths, filename)

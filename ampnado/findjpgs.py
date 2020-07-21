@@ -24,7 +24,8 @@ class FindMissingArt:
 		self.NoArtList = []
 		self.PicDics = []
 		mlist = []
-		for (paths, dirs, files) in os.walk(self.media_path, followlinks=True):
+		for (paths, files) in os.walk(self.media_path, followlinks=True):
+		# for (paths, dirs, files) in os.walk(self.media_path, followlinks=True):
 			for filename in files:
 				fp = os.path.join(paths, filename)
 				ext = fp[-4:]
