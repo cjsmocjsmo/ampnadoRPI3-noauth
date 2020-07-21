@@ -7,7 +7,6 @@ RUN \
 	mkdir /usr/share/Ampnado/static/images/thumbnails
 
 COPY ampnado /usr/share/Ampnado
-WORKDIR /usr/share/Ampnado
 RUN \
 	chmod -R 0755 /usr/share/Ampnado && \
 	chmod -R 0755 /usr/share/Ampnado/static && \
