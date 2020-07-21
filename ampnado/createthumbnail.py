@@ -21,6 +21,7 @@
 import os, base64, glob
 from PIL import Image
 from pymongo import MongoClient, ASCENDING, DESCENDING
+from pprint import pprint
 
 client = MongoClient("mongodb://db:27017/ampnaodDB")
 db = client.ampnadoDB
@@ -55,14 +56,17 @@ class Thumbnails():
 			return "None"
 
 	def create_thumbs(self, p):
+		pprint(p)
 		loc1 = os.environ["AMP_PROGRAM_PATH"] +" temp/" + p["PicId"] + ".jpg"
 		if os.path.exists(loc1):
+			print("yes loc1 exists removing")
 			os.remove(loc1)
 		d2thumb = (125, 125)
 		if p["PicPath"] != None:
 			if os.path.exists(p["PicPath"]):
 				self.get_smallthumb(d2thumb, p["NewPicPath"], p["PicPath"])
 				print("this is newpicpath")
+				print(p["PicPath"])
 				print(p["NewPicPath"])
 			else:
 		 		print("WTF\n WTF\n WTF\n %s" % p["NewPicPath"])
