@@ -270,8 +270,8 @@ class ImageSongsForAlbumHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_pic(self, aquery):
 		picid = db.main.find_one({'AlbumId':aquery}, {"_id":0, "PicId":1})
-		poo = pdb.pics.find_one({"PicId":picid["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
-		return poo["AlbumArtHttpPath"]
+		poo = pdb.pics.find_one({"PicId":picid["PicId"]}, {"_id":0, "Smallthumb":1})
+		return poo["Smallthumb"]
 		
 	@tornado.gen.coroutine
 	def getsongsongid(self, a_query):
@@ -297,7 +297,7 @@ class PathArtHandler(BaseHandler):
 	
 	@tornado.gen.coroutine
 	def get_pic_info(self, a_picid):		
-		return pdb.pics.find_one({'PicId':a_picid}, {'_id':0, 'AlbumArtHttpPath':1})
+		return pdb.pics.find_one({'PicId':a_picid}, {'_id':0, 'Smallthumb':1})
 
 	@tornado.gen.coroutine
 	def get(self):
@@ -305,7 +305,7 @@ class PathArtHandler(BaseHandler):
 		selected = p['selected'][0]
 		fileinfo = yield self.get_file_info(selected)
 		picinfo = yield self.get_pic_info(fileinfo["PicId"])
-		fileinfo['AlbumArtHttpPath'] = picinfo['AlbumArtHttpPath']
+		fileinfo['Smallthumb'] = picinfo['Smallthumb']
 		self.write(fileinfo)
 		self.set_header("Access-Control-Allow-Origin", "*")
 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
@@ -431,7 +431,7 @@ class CreatePlayerPlaylistHandler(BaseHandler):
 				z = {
 					'name': pl['Song'],
 					'file': plp,
-					'thumbnail': picinfo[0]['AlbumArtHttpPath'],
+					'thumbnail': picinfo[0]['Smallthumb'],
 					'album': pl['Album'],
 					'artist': pl['Artist'],
 				}
@@ -522,7 +522,7 @@ class AlbumSearchHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_search(self, albsv):
 		search = viewsdb.command('text', 'albumView', search=albsv)
-		return [{'artist': sea['obj']['artist'], 'album': sea['obj']['album'], 'albumid': sea['obj']['albumid'], 'thumbnail': sea['obj']['albumartHttpPath'], 'songs': sea['obj']['songs'], 'numsongs': sea['obj']['numsongs']} for sea in search['results']]
+		return [{'artist': sea['obj']['artist'], 'album': sea['obj']['album'], 'albumid': sea['obj']['albumid'], 'thumbnail': sea['obj']['Smallthumb'], 'songs': sea['obj']['songs'], 'numsongs': sea['obj']['numsongs']} for sea in search['results']]
 
 	@tornado.gen.coroutine
 	def get(self):
@@ -557,7 +557,7 @@ class RamdomAlbumPicPlaySongHandler(BaseHandler):
 
 	@tornado.gen.coroutine
 	def get_pic_info(self, pid):
-		return pdb.pics.find_one({"PicId": pid['PicId']}, {"_id":0, "AlbumArtHttpPath":1})
+		return pdb.pics.find_one({"PicId": pid['PicId']}, {"_id":0, "Smallthumb":1})
 
 	@tornado.gen.coroutine
 	def get(self):
@@ -565,7 +565,7 @@ class RamdomAlbumPicPlaySongHandler(BaseHandler):
 		songid = p['sid'][0]
 		foo = yield self.get_song_info(songid)
 		boo = yield self.get_pic_info(foo)
-		foo['AlbumArtHttpPath'] = boo['AlbumArtHttpPath']
+		foo['Smallthumb'] = boo['Smallthumb']
 		self.write(dict(soho=foo))
 		self.set_header("Access-Control-Allow-Origin", "*")
 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
@@ -610,9 +610,9 @@ class RandomPicsHandler(BaseHandler):
 		for r in rs:
 			x = {}
 			pid = db.main.find_one({'AlbumId': r}, {'_id':0, 'PicId':1})
-			ace = pdb.pics.find_one({'PicId':pid['PicId']}, {'AlbumArtHttpPath':1, '_id':0})
+			ace = pdb.pics.find_one({'PicId':pid['PicId']}, {'Smallthumb':1, '_id':0})
 			try:	
-				x['thumbnail'] = ace['AlbumArtHttpPath']
+				x['thumbnail'] = ace['Smallthumb']
 			except TypeError:
 				print(r)
 				#x["thumbnail"] = "./static/images/noartpic.jpg"

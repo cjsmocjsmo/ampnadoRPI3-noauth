@@ -57,7 +57,6 @@ class SetUp():
 		FJ = fj.FindMissingArt()
 		FJ.globstuff()
 
-		#Not needed 
 		picdics = FJ.PicDics
 		print(picdics)
 		Data().tags_update_artID(picdics)

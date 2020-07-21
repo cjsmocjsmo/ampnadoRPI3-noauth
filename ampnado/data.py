@@ -241,11 +241,11 @@ class Data:
 		pdata = pymongo.MongoClient("mongodb://db:27017/picdb").picdb
 		if version < 3:
 			pid = [d for d in data.main.find({"AlbumId":x}, {"PicId":1, "_id":0})]
-			phttp = pdata.pics.find_one({"PicId":pid[0]["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
-			return phttp["AlbumArtHttpPath"]
+			phttp = pdata.pics.find_one({"PicId":pid[0]["PicId"]}, {"_id":0, "Smallthumb":1})
+			return phttp["Smallthumb"]
 		else:
 			pid = [d for d in data.main.find({"AlbumId":x}, {"PicId":1, "_id":0})]
-			phttp = pdata.pics.find_one({"PicId":pid[0]["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
-			return phttp["AlbumArtHttpPath"]
+			phttp = pdata.pics.find_one({"PicId":pid[0]["PicId"]}, {"_id":0, "Smallthumb":1})
+			return phttp["Smallthumb"]
 			
 			

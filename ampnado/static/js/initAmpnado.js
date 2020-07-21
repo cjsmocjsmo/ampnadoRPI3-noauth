@@ -86,7 +86,7 @@ function initAlbum1P1Fun1(c0) {
 	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + c0.Artist + "' ";
 	var alb3 = alb2 + "data-artistid='" + c0.ArtistId + "' data-album='" + c0.Album + "' ";
 	var alb4 = alb3 + "data-albumid='" + c0.AlbumId + "'><img id='" + c0.AlbumId + "' ";
-	var alb5 = alb4 + "src='" + c0.AlbumArtHttpPath + "'><h3 id='albH3'>" + c0.Album + "</h3>";
+	var alb5 = alb4 + "src='" + c0.Smallthumb + "'><h3 id='albH3'>" + c0.Album + "</h3>";
 	var alb6 = alb5 + "<p>" + c0.Artist + "</p><span class='ui-li-count'>" + c0.NumSongs + "</span>";
 	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + c0.AlbumId + "' ";
 	var alb = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";

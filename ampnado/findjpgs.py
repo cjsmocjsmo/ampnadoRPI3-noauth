@@ -2,7 +2,7 @@
 import os
 import glob
 import uuid
-import createthumbnail as ct
+import createthumbnail
 from data import Data
 from pymongo import MongoClient
 
@@ -71,10 +71,10 @@ class FindMissingArt:
 		x['PicId'] = picid
 		x['DirPath'] = mpath
 		x["NewPicPath"] = self.thumbnail_path + "/" + picid + ".jpg"
-		x["AlbumArtHttpPath"] = self.http_thumbnail_path + "/" + picid + ".jpg"
+		x["Smallthumb"] = self.http_thumbnail_path + "/" + picid + ".jpg"
 		#check to see if there is a pic
 		jpgGlob = glob.glob(mpath + "/*.jpg")
-		#if no pic exists, extract it from mp3
+		#if no pic exists, extracreatethumbnail it from mp3
 		if len(jpgGlob) == 0:
 			mp3glob = glob.glob(mpath + "/*.mp3")
 			x['mp3glob'] = mp3glob
@@ -93,7 +93,7 @@ class FindMissingArt:
 	def globstuff(self):
 		mg = map(self.get_globs, self.Mp3DIRList)
 		my_globs = list(mg)
-		Thumb = ct.Thumbnails()
+		Thumb = createthumbnail.Thumbnails()
 		mythumbs = [Thumb.create_thumbs(m) for m in my_globs]
 		pdb.pics.insert_many(mythumbs)
 		Data().tags_update_artID(my_globs)

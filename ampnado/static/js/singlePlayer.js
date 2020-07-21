@@ -11,8 +11,8 @@ function calcDuration(d) {
 
 function singPlayer1(d) {
 	console.log(d.soho);
-	$('#introimg').attr('src', d.soho['AlbumArtHttpPath']);
-	$('#playlistalbart').attr('src', d.soho['AlbumArtHttpPath']);
+	$('#introimg').attr('src', d.soho['Smallthumb']);
+	$('#playlistalbart').attr('src', d.soho['Smallthumb']);
 	$('#pictext').text(d.soho['Song']);
 	$('#pictext2').text(d.soho['Album']);
 	audio25 = $('#audio2');

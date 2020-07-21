@@ -64,7 +64,7 @@ function oc_albumOF1(va) {
 	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.Artist + "' ";
 	var alb3 = alb2 + "data-artistid='" + va.ArtistId + "' data-album='" + va.Album + "' ";
 	var alb4 = alb3 + "data-albumid='" + va.AlbumId + "'><img id='" + va.AlbumId + "' ";
-	var alb5 = alb4 + "src='" + va.AlbumArtHttpPath + "'><h3 id='albH3'>" + va.Album + "</h3>";
+	var alb5 = alb4 + "src='" + va.Smallthumb + "'><h3 id='albH3'>" + va.Album + "</h3>";
 	var alb6 = alb5 + "<p>" + va.Artist + "</p><span class='ui-li-count'>" + va.NumSongs + "</span>";
 	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.AlbumId + "' ";
 	var alb81 = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
@@ -347,8 +347,8 @@ function oc_homeBTN_fraz6(b) {
 /*
 function singPlayer1(d) {
 	console.log(d.soho);
-	$('#introimg').attr('src', d.soho['AlbumArtHttpPath']);
-	$('#playlistalbart').attr('src', d.soho['AlbumArtHttpPath']);
+	$('#introimg').attr('src', d.soho['Smallthumb']);
+	$('#playlistalbart').attr('src', d.soho['Smallthumb']);
 	$('#pictext').text(d.soho['Song']);
 	$('#pictext2').text(d.soho['Album']);
 	audio25 = $('#audio2');
@@ -539,8 +539,8 @@ $(document).on('click', '.artOF', function () {
 	},
 	function(data) {
 		audio24.attr('src', data.HttpMusicPath);
-		$('#introimg').attr('src', data.AlbumArtHttpPath);
-		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
+		$('#introimg').attr('src', data.Smallthumb);
+		$('#playlistalbart').attr('src', data.Smallthumb);
 		$('#pictext').text(data.Song);
 		$('#pictext2').text(data.Album);
 		localStorage.setItem('artistPageGetPathArt', JSON.stringify(data));
@@ -655,8 +655,8 @@ $(document).on('click', '.artOF', function () {
 	function(data){
 		var foobar10 = {'song': data.Song, 'songid': selSong};
 		audio23.attr('src', data.HttpMusicPath);
-		$('#introimg').attr('src', data.AlbumArtHttpPath);
-		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
+		$('#introimg').attr('src', data.Smallthumb);
+		$('#playlistalbart').attr('src', data.Smallthumb);
 		$('#pictext').text(data.Song);
 		$('#pictext2').text(data.Album);
 		localStorage.setItem('albumPageGetPathArt ', JSON.stringify(data));
@@ -720,8 +720,8 @@ $(document).on('click', '.artOF', function () {
 	},
 	function(data) {
 		audio2.attr('src', data.HttpMusicPath);
-		$('#introimg').attr('src', data.AlbumArtHttpPath);
-		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
+		$('#introimg').attr('src', data.Smallthumb);
+		$('#playlistalbart').attr('src', data.Smallthumb);
 		$('#pictext').text(data.Song);
 		$('#pictext2').text(data.Album);
 		var booob = {'song': data.Song, 'songid': data.SongId};

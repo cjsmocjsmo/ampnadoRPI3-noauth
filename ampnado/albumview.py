@@ -51,7 +51,7 @@ class AlbumView:
 	def create_albumView_db(self, a):
 		info = self.fone_tags_albumid(a)
 		boo = self.aggregate_albumid(info)
-		info["AlbumArtHttpPath"] = self.pichttp(a)
+		info["Smallthumb"] = self.pichttp(a)
 		info['NumSongs'] = len(boo)
 		info['Songs'] = boo
 		self.viewsdb_insert(info)		
