@@ -64,15 +64,23 @@ class Thumbnails():
 			else:
 		 		print("WTF\n WTF\n WTF\n %s" % p["NewPicPath"])
 		
-		p['Image_Size'] = ""
-		p['Smallthumb'] = ""
+		# p['Image_Size'] = ""
+		# p['Smallthumb'] = ""
 		if os.path.exists(p["NewPicPath"]):
+			print("p[NewPicPath] exists")
+			print(p['Image_Size'])
+			print(p['Smallthumb'])
 			p['Image_Size'] = self.get_thumb_size(p["NewPicPath"])
 			p['Smallthumb'] = self.get_b64_image(p["NewPicPath"])
+			return p
 		if os.path.exists(loc1):
+			print("loc1 exists")
+			print(p['Image_Size'])
+			print(p['Smallthumb'])
 		 	p['Image_Size'] = self.get_thumb_size(loc1)
 		 	p['Smallthumb'] = self.get_b64_image(loc1)
-		print("THIS IS SMALLTHUMB P \n")
-		print(p['Image_Size'])
-		print(p['Smallthumb'])
-		return p
+			return p
+		# print("THIS IS SMALLTHUMB P \n")
+		# print(p['Image_Size'])
+		# print(p['Smallthumb'])
+		# return p
