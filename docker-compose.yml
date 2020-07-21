@@ -12,15 +12,14 @@ services:
     image: ampnadorpi-noauth:0.1
     build: .
     environment:
-      - AMP_PROGRAM_PATH=/home/pi/Desktop/Ampnado
+      - AMP_PROGRAM_PATH=/usr/share/Ampnado
       - AMP_AMPDB_ADDR=mongodb://db:27017/ampnadoDB
       - AMP_VIEWSDB_ADDR=mongodb://db:27017/ampviewsDB
       - AMP_PICDB_ADDR=mongodb://db:27017/picdb
       - AMP_SETUP=1
       - AMP_MEDIA_PATH=/usr/share/ampnado/Music
       - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
-      - AMP_THUMBNAIL_DIR_PATH=/home/pi/Desktop/Ampnado/static/images/thumbnails
-
+      - AMP_THUMBNAIL_DIR_PATH=/usr/share/Ampnado/static/images/thumbnails
       - AMP_NO_ART_PIC_PATH=./static/images/noartpic.jpg
       - AMP_SERVER_ADDR=http://192.168.1.26
       - AMP_SERVER_PORT=6789
