@@ -48,7 +48,7 @@ class Thumbnails():
 			with open(location, 'rb') as imagefile:
 				return ''.join(('data:image/png;base64,', base64.b64encode(imagefile.read()).decode('utf-8')))
 		except FileNotFoundError:
-			print("get_b64_image error")
+			print("FileNotFoundError: get_b64_image error")
 			print(location)
 			return "None"
 
@@ -71,5 +71,6 @@ class Thumbnails():
 		 	p['Image_Size'] = self.get_thumb_size(loc1)
 		 	p['Smallthumb'] = self.get_b64_image(loc1)
 		print("THIS IS SMALLTHUMB P \n")
-		print(p)
+		print(p['Image_Size'])
+		print(p['Smallthumb'])
 		return p
