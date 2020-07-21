@@ -63,9 +63,12 @@ class Thumbnails():
 				print(p["NewPicPath"])
 			else:
 		 		print("WTF\n WTF\n WTF\n %s" % p["NewPicPath"])
-		if os.path.exists(loc1):
-		 	p['Image_Size'] = self.get_thumb_size(loc1)
-		 	p['Smallthumb'] = self.get_b64_image(loc1)
-		print("THIS IS SMALLTHUMB \n")
+		
+		p['Image_Size'] = self.get_thumb_size(p["NewPicPath"])
+		p['Smallthumb'] = self.get_b64_image(p["NewPicPath"])
+		# if os.path.exists(loc1):
+		#  	p['Image_Size'] = self.get_thumb_size(loc1)
+		#  	p['Smallthumb'] = self.get_b64_image(loc1)
+		print("THIS IS SMALLTHUMB P \n")
 		print(p)
 		return p
