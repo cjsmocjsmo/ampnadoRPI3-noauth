@@ -17,7 +17,7 @@ services:
       - AMP_VIEWSDB_ADDR=mongodb://db:27017/ampviewsDB
       - AMP_PICDB_ADDR=mongodb://db:27017/picdb
       - AMP_SETUP=1
-      - AMP_MEDIA_PATH=/usr/src/ampnado/Music
+      - AMP_MEDIA_PATH=/usr/share/ampnado/Music
       - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
       - AMP_THUMBNAIL_DIR_PATH=./static/images/thumbnails
       - AMP_NO_ART_PIC_PATH=./static/images/noartpic.jpg
@@ -31,7 +31,7 @@ services:
     ports:
       - 6789:6789
     volumes:
-      - ampnadorpi-noauthvol:/usr/src/ampnado/Music
+      - ampnadorpi-noauthvol:/usr/share/ampnado/Music
     depends_on:
       - db
 
