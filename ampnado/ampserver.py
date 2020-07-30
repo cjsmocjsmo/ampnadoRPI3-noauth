@@ -62,13 +62,13 @@ class Application(tornado.web.Application):
 			# (r"/logout", LogoutHandler),
 			(r"/RandomPics", RandomPicsHandler),
 			(r"/ArtistAlpha", ArtistAlphaHandler),
-			(r"/InitialArtistInfo", InitialArtistInfoHandler),
+			# (r"/InitialArtistInfo", InitialArtistInfoHandler),
 			(r"/ArtistInfo", ArtistInfoHandler),
 			(r"/AlbumAlpha", AlbumAlphaHandler),
-			(r"/InitialAlbumInfo", InitialAlbumInfoHandler),
+			# (r"/InitialAlbumInfo", InitialAlbumInfoHandler),
 			(r"/AlbumInfo", AlbumInfoHandler),
 			(r"/SongAlpha", SongAlphaHandler),
-			(r"/InitialSongInfo", InitialSongInfoHandler),
+			# (r"/InitialSongInfo", InitialSongInfoHandler),
 			(r"/SongInfo", SongInfoHandler),
 			(r"/ImageSongsForAlbum", ImageSongsForAlbumHandler),
 			(r"/PathArt", PathArtHandler),
@@ -163,15 +163,15 @@ class ArtistAlphaHandler(BaseHandler):
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		self.set_header('Content-Type', 'application/json')
 
-class InitialArtistInfoHandler(BaseHandler):
-	@tornado.gen.coroutine
-	def get(self):
-		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
-		self.write(dict(ia=ia))
-		self.set_header("Access-Control-Allow-Origin", "*")
-		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		self.set_header('Content-Type', 'application/json')
+# class InitialArtistInfoHandler(BaseHandler):
+# 	@tornado.gen.coroutine
+# 	def get(self):
+# 		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
+# 		self.write(dict(ia=ia))
+# 		self.set_header("Access-Control-Allow-Origin", "*")
+# 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+# 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+# 		self.set_header('Content-Type', 'application/json')
 		
 class ArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -201,16 +201,16 @@ class AlbumAlphaHandler(BaseHandler):
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		self.set_header('Content-Type', 'application/json')
 
-class InitialAlbumInfoHandler(BaseHandler):
-	@tornado.gen.coroutine
-	def get(self):
-		ial = [album for album in viewsdb.albumView.find({}, {'_id':0}).limit(off_set)]
-		random.shuffle(ial)
-		self.write(dict(ial=ial))
-		self.set_header("Access-Control-Allow-Origin", "*")
-		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		self.set_header('Content-Type', 'application/json')
+# class InitialAlbumInfoHandler(BaseHandler):
+# 	@tornado.gen.coroutine
+# 	def get(self):
+# 		ial = [album for album in viewsdb.albumView.find({}, {'_id':0}).limit(off_set)]
+# 		random.shuffle(ial)
+# 		self.write(dict(ial=ial))
+# 		self.set_header("Access-Control-Allow-Origin", "*")
+# 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+# 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+# 		self.set_header('Content-Type', 'application/json')
 
 class AlbumInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -239,16 +239,16 @@ class SongAlphaHandler(BaseHandler):
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		self.set_header('Content-Type', 'application/json')
 
-class InitialSongInfoHandler(BaseHandler):
-	@tornado.gen.coroutine
-	def get(self):
-		ias = [song for song in viewsdb.songView.find({}, {'_id':0}).limit(off_set)]		
-		random.shuffle(ias)
-		self.write(dict(ias=ias))
-		self.set_header("Access-Control-Allow-Origin", "*")
-		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		self.set_header('Content-Type', 'application/json')
+# class InitialSongInfoHandler(BaseHandler):
+# 	@tornado.gen.coroutine
+# 	def get(self):
+# 		ias = [song for song in viewsdb.songView.find({}, {'_id':0}).limit(off_set)]		
+# 		random.shuffle(ias)
+# 		self.write(dict(ias=ias))
+# 		self.set_header("Access-Control-Allow-Origin", "*")
+# 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+# 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+# 		self.set_header('Content-Type', 'application/json')
 
 class SongInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -304,8 +304,8 @@ class PathArtHandler(BaseHandler):
 		p = parse_qs(urlparse(self.request.full_url()).query)
 		selected = p['selected'][0]
 		fileinfo = yield self.get_file_info(selected)
-		picinfo = yield self.get_pic_info(fileinfo["PicId"])
-		fileinfo['Smallthumb'] = picinfo['Smallthumb']
+		#picinfo = yield self.get_pic_info(fileinfo["PicId"])
+		#fileinfo['Smallthumb'] = picinfo['Smallthumb']
 		self.write(fileinfo)
 		self.set_header("Access-Control-Allow-Origin", "*")
 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
