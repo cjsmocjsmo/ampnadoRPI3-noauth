@@ -9,7 +9,7 @@ services:
       - 27017:27017
 
   ampserv:
-    image: ampnadorpi-noauth:0.1
+    image: ampnadorpi-noauth:0.2
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado

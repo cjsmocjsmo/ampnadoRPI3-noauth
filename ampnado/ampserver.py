@@ -58,20 +58,20 @@ class Application(tornado.web.Application):
 		handlers = [
 			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': mpath}),
 			(r"/ampnado", MainHandler),
-			# (r"/login", LoginHandler),
-			# (r"/logout", LogoutHandler),
+
 			(r"/RandomPics", RandomPicsHandler),
 			(r"/ArtistAlpha", ArtistAlphaHandler),
-			# (r"/InitialArtistInfo", InitialArtistInfoHandler),
+
 			(r"/ArtistInfo", ArtistInfoHandler),
 			(r"/AlbumAlpha", AlbumAlphaHandler),
-			# (r"/InitialAlbumInfo", InitialAlbumInfoHandler),
+
 			(r"/AlbumInfo", AlbumInfoHandler),
 			(r"/SongAlpha", SongAlphaHandler),
-			# (r"/InitialSongInfo", InitialSongInfoHandler),
+
 			(r"/SongInfo", SongInfoHandler),
 			(r"/ImageSongsForAlbum", ImageSongsForAlbumHandler),
 			(r"/PathArt", PathArtHandler),
+
 			(r"/AllPlaylists", AllPlaylistsHandler),
 			(r"/AllPlaylistSongsFromDB", AllPlaylistSongsFromDBHandler),
 			(r"/Stats", StatsHandler),
@@ -82,6 +82,7 @@ class Application(tornado.web.Application):
 			(r"/RandomAlbumPicPlaySong", RamdomAlbumPicPlaySongHandler),
 			(r"/DeletePlaylistFromDB", DeletePlaylistFromDBHandler),
 			(r"/DeleteSongFromPlaylist", DeleteSongFromPlaylistHandler),
+			
 			(r"/ArtistSearch", ArtistSearchHandler),
 			(r"/AlbumSearch", AlbumSearchHandler),
 			(r"/SongSearch", SongSearchHandler),
@@ -107,33 +108,6 @@ class BaseHandler(tornado.web.RequestHandler):
 class MainHandler(BaseHandler):
 	def get(self):
 		self.render('ampnado.html')
-
-# class LoginHandler(BaseHandler):
-# 	def get(self):
-# 		self.render('login.html')	
-
-	# def check_value(self, a_phrase):
-	# 	dbun = re.match(r'^[\w]+$', a_phrase)
-	# 	if dbun.group(0): return True
-	# 	else: return False
-
-	# def post(self):
-	# 	creds = self.get_argument('username'), self.get_argument('password')
-	# 	if self.check_value(creds[0]) and self.check_value(creds[1]):
-	# 		phash = str(hashlib.sha512(creds[1].encode('utf-8')).hexdigest())
-	# 		try:
-	# 			uid = db.user_creds.find_one({'username': creds[0], 'password': phash})
-	# 			self.set_secure_cookie('ampnado', uid['user_id'])
-	# 			self.redirect('/ampnado')
-	# 		except TypeError:
-	# 			self.render('login.html')
-	# 	else:
-	# 		self.render('login.html')
-	
-# class LogoutHandler(BaseHandler):
-# 	def get(self):
-# 		self.clear_cookie("ampnado")
-# 		self.redirect(self.get_argument('next', 'login'))
 
 class AllPlaylistsHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -162,16 +136,6 @@ class ArtistAlphaHandler(BaseHandler):
 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		self.set_header('Content-Type', 'application/json')
-
-# class InitialArtistInfoHandler(BaseHandler):
-# 	@tornado.gen.coroutine
-# 	def get(self):
-# 		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
-# 		self.write(dict(ia=ia))
-# 		self.set_header("Access-Control-Allow-Origin", "*")
-# 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-# 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-# 		self.set_header('Content-Type', 'application/json')
 		
 class ArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -201,17 +165,6 @@ class AlbumAlphaHandler(BaseHandler):
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		self.set_header('Content-Type', 'application/json')
 
-# class InitialAlbumInfoHandler(BaseHandler):
-# 	@tornado.gen.coroutine
-# 	def get(self):
-# 		ial = [album for album in viewsdb.albumView.find({}, {'_id':0}).limit(off_set)]
-# 		random.shuffle(ial)
-# 		self.write(dict(ial=ial))
-# 		self.set_header("Access-Control-Allow-Origin", "*")
-# 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-# 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-# 		self.set_header('Content-Type', 'application/json')
-
 class AlbumInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_alb_info(self, sel):
@@ -238,17 +191,6 @@ class SongAlphaHandler(BaseHandler):
 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		self.set_header('Content-Type', 'application/json')
-
-# class InitialSongInfoHandler(BaseHandler):
-# 	@tornado.gen.coroutine
-# 	def get(self):
-# 		ias = [song for song in viewsdb.songView.find({}, {'_id':0}).limit(off_set)]		
-# 		random.shuffle(ias)
-# 		self.write(dict(ias=ias))
-# 		self.set_header("Access-Control-Allow-Origin", "*")
-# 		self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-# 		self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-# 		self.set_header('Content-Type', 'application/json')
 
 class SongInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
