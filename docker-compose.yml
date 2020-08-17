@@ -6,16 +6,16 @@ services:
     networks:
       - ampnadorpi-noauth
     ports:
-      - 27017:27017
+      - 27019:27019
 
   ampserv:
     image: ampnadorpi-noauth:0.3
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
-      - AMP_AMPDB_ADDR=mongodb://db:27017/ampnadoDB
-      - AMP_VIEWSDB_ADDR=mongodb://db:27017/ampviewsDB
-      - AMP_PICDB_ADDR=mongodb://db:27017/picdb
+      - AMP_AMPDB_ADDR=mongodb://db:27019/ampnadoDB
+      - AMP_VIEWSDB_ADDR=mongodb://db:27019/ampviewsDB
+      - AMP_PICDB_ADDR=mongodb://db:27019/picdb
       - AMP_SETUP=1
       - AMP_MEDIA_PATH=/usr/share/Ampnado/Music
       - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
