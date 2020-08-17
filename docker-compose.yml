@@ -9,7 +9,7 @@ services:
       - 27017:27017
 
   ampserv:
-    image: ampnadorpi-noauth:0.2
+    image: ampnadorpi-noauth:0.3
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
@@ -21,7 +21,7 @@ services:
       - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
       - AMP_THUMBNAIL_DIR_PATH=/usr/share/Ampnado/static/images/thumbnails
       - AMP_NO_ART_PIC_PATH=/usr/share/Ampnado/static/images/noartpic.jpg
-      - AMP_SERVER_ADDR=http://192.168.1.26
+      - AMP_SERVER_ADDR=http://192.168.1.74
       - AMP_SERVER_PORT=6790
       - AMP_OFFSET_SIZE=45
       - AMP_USERNAME=admin
