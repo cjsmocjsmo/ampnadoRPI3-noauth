@@ -7,9 +7,13 @@ services:
       - ampnadorpi-noauth
     ports:
       - 27019:27019
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: always
 
   ampserv:
-    image: ampnadorpi-noauth:0.3
+    image: ampnadorpi-noauth:1.0
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
