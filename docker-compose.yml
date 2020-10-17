@@ -1,6 +1,10 @@
 version: "3.3"
 
 services:
+  builddeps:
+    image: amp-build-deps
+    build: ./build-deps/
+
   db:
     image: andresvidal/rpi3-mongodb3
     networks:
@@ -48,5 +52,6 @@ volumes:
     driver_opts:
       type: none
 #THIS NEEDS TO BE CHANGE TO THE CORRECT PATH ON THE PI
-      device: /home/pi/Music
+      # device: /home/pi/Music
+      device: /home/teresa/Music
       o: bind
