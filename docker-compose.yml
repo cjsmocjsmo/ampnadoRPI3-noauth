@@ -1,9 +1,6 @@
 version: "3.3"
 
 services:
-  builddeps:
-    image: amp-build-deps
-    build: ./build-deps/
 
   db:
     image: andresvidal/rpi3-mongodb3
