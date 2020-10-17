@@ -50,5 +50,4 @@ volumes:
       type: none
 #THIS NEEDS TO BE CHANGE TO THE CORRECT PATH ON THE PI
       device: /home/pi/Music
-      # device: /home/teresa/Music
       o: bind
